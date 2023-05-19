@@ -1,0 +1,38 @@
+{
+  "name": "nodejs-2",
+  "version": "1.0.0",
+  "description": "PostgreSQL API",
+  "main": "api.js",
+  "scripts": {
+    "test": "node api.js",
+    "start": "nodemon src/api.js",
+    "deploy": "firebase deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/errorsolver/nodejs-api.git"
+  },
+  "keywords": [
+    "api"
+  ],
+  "author": "errorsolver",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/errorsolver/nodejs-api/issues"
+  },
+  "homepage": "https://github.com/errorsolver/nodejs-api#readme",
+  "dependencies": {
+    "body-parse": "^0.1.0",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    
+    "pg": "^8.11.0",
+    "pg-promise": "^11.4.3"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.2"
+  },
+  "engines": {
+    "node": "18"
+  }
+}

@@ -1,17 +1,10 @@
-const {Client, Pool} = require('pg')
+require('dotenv').config()
+const {Pool, Client} = require('pg')
 
-// const pool = `postgres://hadiantavincen:28aqWJQDEPrb@ep-steep-forest-053402-pooler.ap-southeast-1.aws.neon.tech/angular-web?sslmode=require`
-// const pool = 'postgres://hadiantavincen:28aqWJQDEPrb@ep-steep-forest-053402.ap-southeast-1.aws.neon.tech/angular-web?sslmode=require'
+const DB_URI = process.env.DB_URI
 
-// const db = new Client({pool})
-const pool = new Pool({connectionString: `postgres://hadiantavincen:28aqWJQDEPrb@ep-steep-forest-053402-pooler.ap-southeast-1.aws.neon.tech/angular-web?sslmode=require`})
+const pool = new Pool({connectionString: DB_URI})
 
-// const pool = new Client({
-//     user: 'postgres',
-//     database: 'angular_web',
-//     password: '123',
-//     port: 5432,
-//     host: 'localhost'
-// })
-    
+const client = new Client({connectionString: DB_URI})
+
 module.exports = pool

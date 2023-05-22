@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const cookieParser = require('cookie-parser')
 
@@ -10,7 +11,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(router)
 
-const port = 3000
+const port = process.env.PORT
 pool
     .connect()
     .then(() => app.listen(port), console.log(`Connected, Port: ${port}`))

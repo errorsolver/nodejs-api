@@ -1,60 +1,40 @@
-const db = require('../connection')
 const express = require('express')
-const functions = require('firebase-functions')
+const cookieParser = require('cookie-parser')
+
+const pool = require('./database/connection')
+const router = require('./routes/authRoutes')
 
 const app = new express()
 
+app.use(express.json())
+app.use(cookieParser())
+app.use(router)
+
 const port = 3000
-app.listen(port, () => {
-    console.log(`Listen to localhost:${port}`);
+pool
+    .connect()
+    .then(() => app.listen(port), console.log(`Connected, Port: ${port}`))
+    .catch(err => console.log(err))
+
+pool.on('error', (err, client) => {
+    console.error('Unexpected error on idle client', err)
+    process.exit(-1)
 })
 
-db.connect()
-
-app.get('/users', (req, res) => {
-    db.query(`select * from user_data`, (err, result) => {
-        console.log('get all users');
-        if (!err) {
-            res.send(result.rows)
-        } else {
-            console.error(err);
-        }
-    })
-    db.end
+// cookies
+app.get('/set-cookies', (req, res) => {
+    // res.setHeader('Set-Cookie', 'new-user=true')
+    res.cookie('newUser', false)
+    // res.cookie('haveMoney', true, {maxAge: 1000 * 60 * 60 * 24, secure: true})
+    res.cookie('haveMoney', true, {maxAge: 1000 * 60 * 60 * 24, httpOnly: true /* Cant read using document.cookies, httponly clear */})
+    res.send('got cookie')
 })
 
-app.get('', (req, res) => {
-    res.send("Connected To API")
-})
 
-app.get('/users/:id', (req, res) => {
-    console.log(`user id: ${req.params.id}`);
-    db.query(`select * from user_data where id = ${req.params.id}`, (err, result) => {
-        console.log(`get user by id`);
-        console.log(`user id err: ${err}`);
-        console.log(`user id res: ${result}`);
-        if (!err) {
-            res.send(result.rows)
-        } else {
-            console.error(err);
-        }
-    })
-    db.end
-})
+app.get('/read-cookies', (req, res) => {
+    const cookies = req.cookies;
 
-app.get('/username/:name', (req, res) => {
-    console.log(`user id: ${req.params.name}`);
-    db.query(`select password from users where name = ${req.params.name}`, (err, result) => {
-        console.log(`get user by id`);
-        console.log(`user id err: ${err}`);
-        console.log(`user id res: ${result}`);
-        if (!err) {
-            res.send(result.rows)
-        } else {
-            console.error(err);
-        }
-    })
-    db.end
+    console.log(cookies)
+    console.log(cookies.newUser)
+    res.json(cookies)
 })
-
-exports.api = functions.https.onRequest(app)
